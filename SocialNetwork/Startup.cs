@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SocialNetwork.Persistence.MySql;
+using SocialNetwork.Service;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace SocialNetwork
@@ -30,7 +28,7 @@ namespace SocialNetwork
             services.AddIdentity<IdentityUser, IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
-           
+
             services
                 .AddAuthentication(options =>
                 {
@@ -41,6 +39,7 @@ namespace SocialNetwork
                 })
                 .AddJwtBearer(jwtBearerOptions =>
                 {
+                    jwtBearerOptions.RequireHttpsMetadata = false;
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateActor = false,
@@ -77,13 +76,16 @@ namespace SocialNetwork
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("MyPolicy");
+            app.UseAuthentication();
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Privacy Social Network API V1");
             });
 
-            app.UseAuthentication();
+            
             app.UseMvc();
 
             dbContext.Database.EnsureCreated();

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SocialNetwork.Persistence
+namespace SocialNetwork.Persistence.MySql
 {
     public class Class1
     {

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork.Service", "SocialNetwork\SocialNetwork.Service.csproj", "{D3F170B9-D5D4-4BB0-A350-3EFCFA053296}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetwork.Service", "SocialNetwork\SocialNetwork.Service.csproj", "{D3F170B9-D5D4-4BB0-A350-3EFCFA053296}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork.Persistence", "SocialNetwork.Persistence\SocialNetwork.Persistence.csproj", "{C6454A25-469E-41E5-8092-FDEB97456DCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetwork.Persistence.MySql", "SocialNetwork.Persistence\SocialNetwork.Persistence.MySql.csproj", "{C6454A25-469E-41E5-8092-FDEB97456DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork.Infrastructure", "SocialNetwork.Infrastructure\SocialNetwork.Infrastructure.csproj", "{024B6927-D13C-40F3-854B-ADB68D339614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetwork.Infrastructure", "SocialNetwork.Infrastructure\SocialNetwork.Infrastructure.csproj", "{024B6927-D13C-40F3-854B-ADB68D339614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork.Application", "SocialNetwork.Application\SocialNetwork.Application.csproj", "{9D8D8504-7D3E-490A-ACDF-1BD88E58D538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetwork.Application", "SocialNetwork.Application\SocialNetwork.Application.csproj", "{9D8D8504-7D3E-490A-ACDF-1BD88E58D538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork.Domain", "SocialNetwork.Domain\SocialNetwork.Domain.csproj", "{1F5C1D57-B819-4070-B200-A427A57C05ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetwork.Domain", "SocialNetwork.Domain\SocialNetwork.Domain.csproj", "{1F5C1D57-B819-4070-B200-A427A57C05ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

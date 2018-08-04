@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SocialNetwork.Persistence.MySql;
+using SocialNetwork.Application.Authentication;
+using SocialNetwork.Persistence.MySql.ApplicationDbContext;
+using SocialNetwork.Persistence.MySql.Authentication;
+using SocialNetwork.Service.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace SocialNetwork
@@ -25,35 +26,33 @@ namespace SocialNetwork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>();
+            services.AddTransient<IApplicationDbContext, ApplicationDbContext>(n => new ApplicationDbContext(Configuration["MySql:ConnectionString"]));
+            services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddDefaultTokenProviders();
-           
+            services.AddTransient<IJwtTokenOptions, JwtTokenOptions>(o => new JwtTokenOptions(Configuration["Jwt:Issuer"], Configuration["Jwt:Audience"], Configuration["Jwt:SecurityKey"], Int32.Parse(Configuration["Jwt:ExpireHours"])));
+            services.AddTransient<IAuthenticationHandler, AuthenticationHandler>();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ValidationFilter));
+                options.Filters.Add(typeof(GlobalExceptionFilter));
+            });
+
             services
-                .AddAuthentication(options =>
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                })
-                .AddJwtBearer(jwtBearerOptions =>
-                {
-                    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateActor = false,
-                        ValidateAudience = false,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecurityKey"]))
                     };
                 });
-
-            services.AddMvc();
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
@@ -70,7 +69,7 @@ namespace SocialNetwork
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -84,9 +83,8 @@ namespace SocialNetwork
             });
 
             app.UseAuthentication();
-            app.UseMvc();
 
-            dbContext.Database.EnsureCreated();
+            app.UseMvc();
         }
     }
 }

@@ -52,6 +52,7 @@ namespace SocialNetwork.Application.Authentication
 
         private bool ValidatePassword(string password, string hash)
         {
+            if (hash == "") return false;
             var parts = hash.Split(':');
             var salt = Convert.FromBase64String(parts[0]);
             var bytes = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA512, 10000, 16);

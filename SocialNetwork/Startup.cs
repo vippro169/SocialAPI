@@ -58,7 +58,9 @@ namespace SocialNetwork
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowAnyHeader()
+                       .AllowCredentials()
+                       .Build();
             }));
 
             // Register the Swagger generator, defining one or more Swagger documents
@@ -75,6 +77,8 @@ namespace SocialNetwork
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("MyPolicy");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

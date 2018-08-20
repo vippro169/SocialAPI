@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace SocialNetwork.Application.Authentication.RequestModel
+namespace SocialNetwork.Application.Users.RequestModel
 {
-    public class SignUpRequest
+    public class SignInRequest
     {
-        [EmailAddress(ErrorMessage = "Invalid email!")]
         [Required(ErrorMessage = "Email required!")]
         public string Email { get; set; }
 

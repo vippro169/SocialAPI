@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetwork.Service.Controllers;
 
 namespace SocialNetwork.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ValuesController : BaseController
     {
         // GET api/values
-        [Authorize]
         [HttpGet]
         public string Get()
         {
-            return User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            return AuthId;
         }
     }
 }

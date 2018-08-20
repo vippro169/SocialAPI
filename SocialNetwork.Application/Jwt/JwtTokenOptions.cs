@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SocialNetwork.Application.Authentication
+namespace SocialNetwork.Application.Jwt
 {
     public class JwtTokenOptions : IJwtTokenOptions
     {

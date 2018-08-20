@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SocialNetwork.Application.Authentication;
+using SocialNetwork.Application.Jwt;
+using SocialNetwork.Application.Users;
 using SocialNetwork.Persistence.MySql.ApplicationDbContext;
-using SocialNetwork.Persistence.MySql.Authentication;
+using SocialNetwork.Persistence.MySql.UserRepository;
 using SocialNetwork.Service.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -27,10 +28,10 @@ namespace SocialNetwork
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>(n => new ApplicationDbContext(Configuration["MySql:ConnectionString"]));
-            services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<IJwtTokenOptions, JwtTokenOptions>(o => new JwtTokenOptions(Configuration["Jwt:Issuer"], Configuration["Jwt:Audience"], Configuration["Jwt:SecurityKey"], Int32.Parse(Configuration["Jwt:ExpireHours"])));
-            services.AddTransient<IAuthenticationHandler, AuthenticationHandler>();
+            services.AddTransient<IUserHandler, UserHandler>();
 
             services.AddMvc(options =>
             {

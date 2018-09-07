@@ -7,13 +7,23 @@ namespace SocialNetwork.Service.Controllers
 {
     public abstract class BaseController : Controller
     {
-        protected string AuthId
+        protected string AuthUserId
         {
             get
             {
                 var idClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
                 if (idClaim == null) throw new ApplicationException("Current user not found");
                 return idClaim.Value;
+            }
+        }
+
+        protected string AuthUserPath
+        {
+            get
+            {
+                var pathClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Actor);
+                if (pathClaim == null) throw new ApplicationException("Current user not found");
+                return pathClaim.Value;
             }
         }
     }

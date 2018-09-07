@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace SocialNetwork.Application.Users.RequestModel
 {
@@ -22,12 +20,7 @@ namespace SocialNetwork.Application.Users.RequestModel
         [Required(ErrorMessage = "Email Privacy required!")]
         public string EmailPrivacy { get; set; }
 
-        [Required(ErrorMessage = "Birth Date Privacy required!")]
-        public string BirthDatePrivacy { get; set; }
-
-        [Required(ErrorMessage = "Birthday Year Privacy required!")]
-        public string BirthYearPrivacy { get; set; }
-
-
+        [Required(ErrorMessage = "Birthday Privacy required!")]
+        public string BirthdayPrivacy { get; set; }
     }
 }

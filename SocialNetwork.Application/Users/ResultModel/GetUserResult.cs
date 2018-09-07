@@ -10,6 +10,8 @@ namespace SocialNetwork.Application.Users.ResultModel
 
         public string Name { get; set; }
 
+        public string Path { get; set; }
+
         public string Gender { get; set; }
 
         public DateTime? Birthday { get; set; }
@@ -18,8 +20,6 @@ namespace SocialNetwork.Application.Users.ResultModel
 
         public string EmailPrivacy { get; set; }
 
-        public string BirthDatePrivacy { get; set; }
-
-        public string BirthYearPrivacy { get; set; }
+        public string BirthdayPrivacy { get; set; }
     }
 }

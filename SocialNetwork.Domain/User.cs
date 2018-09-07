@@ -19,11 +19,12 @@ namespace SocialNetwork.Domain
         
         public string PasswordHash { get; set; }
 
+        [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "Invalid Path!")]
+        public string Path { get; set; }
+
         public string EmailPrivacy { get; set; }
 
-        public string BirthDatePrivacy { get; set; }
-
-        public string BirthYearPrivacy { get; set; }
+        public string BirthdayPrivacy { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }

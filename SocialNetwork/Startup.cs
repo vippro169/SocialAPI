@@ -4,9 +4,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SocialNetwork.Application.Comments;
+using SocialNetwork.Application.Friends;
 using SocialNetwork.Application.Jwt;
+using SocialNetwork.Application.Posts;
 using SocialNetwork.Application.Users;
 using SocialNetwork.Persistence.MySql.ApplicationDbContext;
+using SocialNetwork.Persistence.MySql.CommentRepository;
+using SocialNetwork.Persistence.MySql.FriendRepository;
+using SocialNetwork.Persistence.MySql.PostRepository;
 using SocialNetwork.Persistence.MySql.UserRepository;
 using SocialNetwork.Service.Filters;
 using Swashbuckle.AspNetCore.Swagger;
@@ -29,9 +35,17 @@ namespace SocialNetwork
         {
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>(n => new ApplicationDbContext(Configuration["MySql:ConnectionString"]));
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IFriendRepository, FriendRepository>();
+            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+
 
             services.AddTransient<IJwtTokenOptions, JwtTokenOptions>(o => new JwtTokenOptions(Configuration["Jwt:Issuer"], Configuration["Jwt:Audience"], Configuration["Jwt:SecurityKey"], Int32.Parse(Configuration["Jwt:ExpireHours"])));
             services.AddTransient<IUserHandler, UserHandler>();
+            services.AddTransient<IFriendHandler, FriendHandler>();
+            services.AddTransient<IPostHandler, PostHandler>();
+            services.AddTransient<ICommentHandler, CommentHandler>();
+
 
             services.AddMvc(options =>
             {

@@ -20,5 +20,9 @@ namespace SocialNetwork.Application.Users.RequestModel
 
         [Required(ErrorMessage = "Birthday required!")]
         public DateTime Birthday { get; set; }
+
+        [Required(ErrorMessage = "Path required!")]
+        [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "Invalid Path!")]
+        public string Path { get; set; }
     }
 }

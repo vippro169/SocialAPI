@@ -2,7 +2,7 @@
 using SocialNetwork.Domain;
 using SocialNetwork.Persistence.MySql.ApplicationDbContext;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace SocialNetwork.Persistence.MySql.UserRepository
 {
@@ -20,8 +20,9 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"INSERT INTO users (Id, Name, Gender, Birthday, Email, PasswordHash, Path, CreatedDate) " +
-                              $"VALUES ('{user.Id}', '{user.Name}', '{user.Gender}' , '{user.Birthday.ToString("yyyy-MM-dd")}', " +
+                              $"VALUES ('{user.Id}', @name, '{user.Gender}' , '{user.Birthday.ToString("yyyy-MM-dd")}', " +
                               $"'{user.Email}', '{user.PasswordHash}', '{user.Path}', '{user.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}');";
+            cmd.Parameters.AddWithValue("@name", user.Name);
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }
@@ -80,7 +81,8 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
         {
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = $"SELECT Id FROM users WHERE Email = '{email}';";
+            cmd.CommandText = $"SELECT Id FROM users WHERE Email = @email;";
+            cmd.Parameters.AddWithValue("@email", email);
             var reader = cmd.ExecuteReader();
             string result = "";
             using (reader)
@@ -98,7 +100,8 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
         {
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = $"SELECT Path FROM users WHERE Email = '{email}';";
+            cmd.CommandText = $"SELECT Path FROM users WHERE Email = @email;";
+            cmd.Parameters.AddWithValue("@email", email);
             var reader = cmd.ExecuteReader();
             string result = "";
             using (reader)
@@ -211,15 +214,42 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
             return user;
         }
 
+        public List<User> SearchUserByName(string keyword)
+        {
+            _db.Connection.Open();
+            var cmd = _db.Connection.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"SELECT Id, Name, Path " +
+                              $"FROM users WHERE Name LIKE @keyword;";
+            cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
+            var reader = cmd.ExecuteReader();
+            List<User> users = new List<User>();
+            using (reader)
+            {
+                while (reader.Read())
+                {
+                    users.Add(new User()
+                    {
+                        Id = reader["Id"].ToString(),
+                        Name = reader["Name"].ToString(),
+                        Path = reader["Path"].ToString(),
+                    });
+                };
+            }
+            _db.Connection.Close();
+            return users;
+        }
+
 
         public void UpdateUser(User user)
         {
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"UPDATE users " +
-                              $"SET Name='{user.Name}', Gender='{user.Gender}', Birthday='{user.Birthday.ToString("yyyy-MM-dd")}', " +
+                              $"SET Name=@name, Gender='{user.Gender}', Birthday='{user.Birthday.ToString("yyyy-MM-dd")}', " +
                               $"EmailPrivacy='{user.EmailPrivacy}', BirthdayPrivacy='{user.BirthdayPrivacy}' " +
                               $"WHERE Id='{user.Id}';";
+
+            cmd.Parameters.AddWithValue("@name", user.Name);
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }

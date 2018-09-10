@@ -21,7 +21,12 @@ namespace SocialNetwork.Persistence.MySql.PostRepository
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"INSERT INTO posts (Id, UserId, Content, Privacy, CreatedDate) " +
-                              $"VALUES ('{post.Id}', '{post.UserId}', '{post.Content}' , '{post.Privacy}', '{post.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}');";
+                              $"VALUES (@id , @userId , @content , @privacy, @createdDate);";
+            cmd.Parameters.AddWithValue("@id", post.Id);
+            cmd.Parameters.AddWithValue("@userId", post.UserId);
+            cmd.Parameters.AddWithValue("@content", post.Content);
+            cmd.Parameters.AddWithValue("@privacy", post.Privacy);
+            cmd.Parameters.AddWithValue("@createdDate", post.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss"));
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }
@@ -112,8 +117,9 @@ namespace SocialNetwork.Persistence.MySql.PostRepository
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"UPDATE posts " +
-                              $"SET Content='{post.Content}', Privacy='{post.Privacy}' " +
+                              $"SET Content=@content, Privacy='{post.Privacy}' " +
                               $"WHERE Id='{post.Id}';";
+            cmd.Parameters.AddWithValue("@content", post.Content);
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }

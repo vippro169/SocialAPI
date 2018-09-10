@@ -78,6 +78,15 @@ namespace SocialNetwork.Service.Controllers
         }
 
         [Authorize]
+        [Route("search/{keyword}")]
+        [HttpGet]
+        public IActionResult SearchUser(string keyword)
+        {
+            var result = _userHandler.SearchUser(keyword);
+            return Ok(result);
+        }
+
+        [Authorize]
         [Route("edit/{userId}")]
         [HttpPut]
         public IActionResult EditUser(string userId, [FromBody]EditUserRequest request)

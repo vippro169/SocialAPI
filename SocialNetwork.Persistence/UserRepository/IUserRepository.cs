@@ -1,4 +1,5 @@
 ﻿using SocialNetwork.Domain;
+using System.Collections.Generic;
 
 namespace SocialNetwork.Persistence.MySql.UserRepository
 {
@@ -20,6 +21,7 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
         string GetUserNameById(string id);
         string GetUserIdByPath(string path);
         User GetUserByPath(string path);
+        List<User> SearchUserByName(string keyword);
         void UpdateUser(User user);
         void ChangePassword(string userId, string passwordHash);
         void DeleteUser(string id);

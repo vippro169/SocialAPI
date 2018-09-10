@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -159,6 +161,21 @@ namespace SocialNetwork.Application.Users
                 Path = user.Path,
                 Gender = user.Gender
             };
+        }
+
+        public List<GetUserResult> SearchUser(string keyword)
+        {
+            List<GetUserResult> users = new List<GetUserResult>();
+            _userRepository.SearchUserByName(WebUtility.UrlDecode(keyword)).ForEach(x =>
+            {
+                users.Add(new GetUserResult()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Path = x.Path
+                });
+            });
+            return users;
         }
 
         public void EditUser(string userId, EditUserRequest userEdit)

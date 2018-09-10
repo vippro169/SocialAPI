@@ -20,7 +20,8 @@ namespace SocialNetwork.Persistence.MySql.CommentRepository
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"INSERT INTO comments (Id, UserId, PostId, Content, CreatedDate) " +
-                              $"VALUES ('{comment.Id}', '{comment.UserId}', '{comment.PostId}', '{comment.Content}' , '{comment.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}');";
+                              $"VALUES ('{comment.Id}', '{comment.UserId}', '{comment.PostId}', @content , '{comment.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}');";
+            cmd.Parameters.AddWithValue("@content", comment.Content);
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }
@@ -57,9 +58,10 @@ namespace SocialNetwork.Persistence.MySql.CommentRepository
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"UPDATE comments " +
-                              $"SET Content='{content}'" +
+                              $"SET Content=@content" +
                               $"WHERE Id='{id}';";
             cmd.ExecuteNonQuery();
+            cmd.Parameters.AddWithValue("@content", content);
             _db.Connection.Close();
         }
 

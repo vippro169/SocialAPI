@@ -75,10 +75,10 @@ namespace SocialNetwork.Application.Users
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public string SignUp(SignUpRequest request)
+        public string SignUp(int callerId , SignUpRequest request)
         {
             string result = null;
-            if (_userRepository.CheckEmailExists(request.Email)) result = "*Email already exists!";
+            if (_userRepository.CheckEmailExists(callerId, request.Email)) result = "*Email already exists!";
             else if (_userRepository.CheckPathExists(request.Path)) result = "*Path already exists!";
             else
             {
@@ -93,7 +93,7 @@ namespace SocialNetwork.Application.Users
                     Path = request.Path.ToLower()
                 };
                 _userRepository.CreatUser(user);
-                _userRepository.CreateUserRole(user.Id);
+                _userRepository.UpdateRole(user.Id, 1);
             }
             return result;
         }
@@ -152,14 +152,16 @@ namespace SocialNetwork.Application.Users
                 Path = user.Path,
                 Gender = user.Gender,
                 Birthday = user.BirthdayPrivacy != "Only me" ? (DateTime?)user.Birthday: null,
-                Email = user.EmailPrivacy != "Only me" ? user.Email : null,
+                Email = user.EmailPrivacy != "Only me" ? user.Email : null
             };
             else return new GetUserResult()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Path = user.Path,
-                Gender = user.Gender
+                Gender = user.Gender,
+                Birthday = user.BirthdayPrivacy == "Public" ? (DateTime?)user.Birthday : null,
+                Email = user.EmailPrivacy == "Public" ? user.Email : null
             };
         }
 

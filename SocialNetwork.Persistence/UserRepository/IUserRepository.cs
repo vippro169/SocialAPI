@@ -6,13 +6,11 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
     public interface IUserRepository
     {
         void CreatUser(User account);
-        void CreateUserRole(string id);
-        void CreateAdminRole(string id);
         void UpdateRole(string id, int role);
         bool IsAdmin(string id);
         string GetPasswordHash(string email);
         string GetPasswordHashById(string userId);
-        bool CheckEmailExists(string email);
+        bool CheckEmailExists(int callerId, string email);
         bool CheckPathExists(string path);
         string GetUserIdByEmail(string email);
         string GetUserPathByEmail(string email);

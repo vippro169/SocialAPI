@@ -71,30 +71,30 @@ namespace SocialNetwork.Persistence.MySql.FriendRepository
             return friendRequest;
         }
 
-        public FriendRequest GetFriendRequestById(string requestId)
-        {
-            _db.Connection.Open();
-            var cmd = _db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = $"SELECT * FROM friendrequests " +
-                              $"WHERE Id=''{requestId};";
-            var reader = cmd.ExecuteReader();
-            var friendRequest = new FriendRequest();
-            using (reader)
-            {
-                while (reader.Read())
-                {
-                    friendRequest.Id = reader["Id"].ToString();
-                    friendRequest.SenderId = reader["SenderId"].ToString();
-                    friendRequest.ReceiverId = reader["ReceiverId"].ToString();
-                    if (reader["Confirmed"] != DBNull.Value)
-                    {
-                        friendRequest.Confirmed = reader["Confirmed"].ToString() == "1" ? true : false;
-                    }
-                }
-            }
-            _db.Connection.Close();
-            return friendRequest;
-        }
+        //public FriendRequest GetFriendRequestById(string requestId)
+        //{
+        //    _db.Connection.Open();
+        //    var cmd = _db.Connection.CreateCommand() as MySqlCommand;
+        //    cmd.CommandText = $"SELECT * FROM friendrequests " +
+        //                      $"WHERE Id='{requestId}';";
+        //    var reader = cmd.ExecuteReader();
+        //    var friendRequest = new FriendRequest();
+        //    using (reader)
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            friendRequest.Id = reader["Id"].ToString();
+        //            friendRequest.SenderId = reader["SenderId"].ToString();
+        //            friendRequest.ReceiverId = reader["ReceiverId"].ToString();
+        //            if (reader["Confirmed"] != DBNull.Value)
+        //            {
+        //                friendRequest.Confirmed = reader["Confirmed"].ToString() == "1" ? true : false;
+        //            }
+        //        }
+        //    }
+        //    _db.Connection.Close();
+        //    return friendRequest;
+        //}
 
         public List<FriendRequest> GetListPendingFriendRequest(string userId)
         {

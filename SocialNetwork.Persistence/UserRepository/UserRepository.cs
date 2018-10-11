@@ -3,6 +3,7 @@ using SocialNetwork.Domain;
 using SocialNetwork.Persistence.MySql.ApplicationDbContext;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace SocialNetwork.Persistence.MySql.UserRepository
 {
@@ -24,37 +25,19 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
                               $"'{user.Email}', '{user.PasswordHash}', '{user.Path}', '{user.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")}');";
             cmd.Parameters.AddWithValue("@name", user.Name);
             cmd.ExecuteNonQuery();
+
+            //MySqlCommand cmd = new MySqlCommand("CreateUser", _db.Connection);
+            //cmd.CommandType = CommandType.StoredProcedure;
+            //cmd.CommandText = $"Call CreateUser(-1, 'Jason', 'jason@gmail.com', 1);";
+            
             _db.Connection.Close();
         }
-
-        public void CreateUserRole(string id)
-        {
-            _db.Connection.Open();
-            var cmd = _db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = $"INSERT INTO userrole (UserId, RoleId) " +
-                              $"VALUES ('{id}', 2); ";
-            cmd.ExecuteNonQuery();
-            _db.Connection.Close();
-        }
-
-        public void CreateAdminRole(string id)
-        {
-            _db.Connection.Open();
-            var cmd = _db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = $"INSERT INTO userrole (UserId, RoleId) " +
-                              $"VALUES ('{id}', 1); ";
-            cmd.ExecuteNonQuery();
-            _db.Connection.Close();
-        }
-
 
         public void UpdateRole(string id, int role)
         {
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = $"UPDATE userrole " +
-                              $"SET RoleId={role}, " +
-                              $"WHERE Id='{id}';";
+            cmd.CommandText = $"UPDATE users SET RoleId={role} WHERE Id='{id}';";
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }
@@ -254,13 +237,14 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
             _db.Connection.Close();
         }
 
-        public bool CheckEmailExists(string email)
+        public bool CheckEmailExists(int callerId, string email)
         {
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"SELECT (CASE WHEN EXISTS " +
-                              $"(SELECT Name from users where Email = '{email}') then 1 else 0 end) as EmailCheck;";
-            var reader = cmd.ExecuteReader();
+                              $"(SELECT Name FROM users WHERE Email = '{email}') THEN 1 ELSE 0 end) as EmailCheck;";
+            //cmd.CommandText = $"CALL CheckEmailExist({callerId}, '{email}')";
+            var reader = cmd.ExecuteReader(); ;
             bool result = true;
             using (reader)
             {
@@ -327,6 +311,7 @@ namespace SocialNetwork.Persistence.MySql.UserRepository
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"DELETE FROM users " +
                               $"WHERE Id='{id}';";
+            //cmd.CommandText = $"CALL DeleteUser(2, 2)";
             cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }

@@ -20,7 +20,7 @@ namespace SocialNetwork.Service.Controllers
         [HttpPost]
         public IActionResult SignUp([FromBody]SignUpRequest request)
         {
-            var result = _userHandler.SignUp(request);
+            var result = _userHandler.SignUp(-1, request);
             return Ok(result);
         }
 

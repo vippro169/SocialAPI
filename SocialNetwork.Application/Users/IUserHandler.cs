@@ -6,7 +6,7 @@ namespace SocialNetwork.Application.Users
 {
     public interface IUserHandler
     {
-        string SignUp(SignUpRequest request);
+        string SignUp(int callerId, SignUpRequest request);
         string SignIn(SignInRequest request);
         string GetUserName(string userPath);
         string GetUserNameById(string userId);

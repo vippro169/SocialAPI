@@ -58,10 +58,10 @@ namespace SocialNetwork.Persistence.MySql.CommentRepository
             _db.Connection.Open();
             var cmd = _db.Connection.CreateCommand() as MySqlCommand;
             cmd.CommandText = $"UPDATE comments " +
-                              $"SET Content=@content" +
+                              $"SET Content=@content " +
                               $"WHERE Id='{id}';";
-            cmd.ExecuteNonQuery();
             cmd.Parameters.AddWithValue("@content", content);
+            cmd.ExecuteNonQuery();
             _db.Connection.Close();
         }
 
